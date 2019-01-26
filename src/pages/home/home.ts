@@ -11,8 +11,8 @@ export class HomePage {
 
   type: string;
   utype: String;
-  officials: Array<any> = [];
   atheletes: Array<any> = [];
+  officials: Array<any> = [];
 
   constructor(public navCtrl: NavController,
     private barcodeScanner: BarcodeScanner,
@@ -20,6 +20,13 @@ export class HomePage {
       // this.dataService.getProducts()
       //   .subscribe((response)=> {
       //   });
+  }
+
+  onTypeChange() {
+    const vm = this;
+    vm.utype = '';
+    vm.atheletes = [];
+    vm.officials = [];
   }
 
   scan() {
@@ -44,26 +51,12 @@ export class HomePage {
         vm.officials = [];
         vm.atheletes = [];
         if(res && Array.isArray(res) && res.length > 0) {
-          res.forEach(u => {
-            const data = u.split(',');
-            if(data && Array.isArray(data) && data.length > 0) {
-              const obj = {};
-              if(data.length > 4) {
-                obj['no'] = data[0];
-                obj['name'] = data[1];
-                obj['category'] = data[2];
-                obj['bibno'] = data[3];
-                obj['zone'] = data[4];
-                vm.atheletes.push(obj);
-              } else {
-                obj['no'] = data[0];
-                obj['name'] = data[1];
-                obj['zone'] = (data.length > 3) ? data[2] : '';
-                obj['designation'] = (data.length > 3) ? data[3] : data[2];
-                vm.officials.push(obj);
-              }
-            }
+          vm.atheletes = res.filter(r => {
+            return r.type === 'atheletes';
           });
+          vm.officials = res.filter(r => {
+            return r.type === 'officials';
+          });          
         } else {
           vm.dataService.toastMessage('No users', 'failure');
         }

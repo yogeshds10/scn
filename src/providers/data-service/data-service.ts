@@ -44,13 +44,34 @@ export class DataServiceProvider {
 
   updateOffline(key: string, data: any) {
     const vm = this;
-    let datum = [];
-    vm.getData(key).then((res) => {
-      if (res && Array.isArray(res) && res.length > 0) {
-        datum = res;
+    let users = [];
+    if(data) {
+      let details = data.split(',');
+      details = details.filter(x => { return x });
+      if(details && Array.isArray(details) && details.length > 0) {
+        const userObj = {};
+        if(details.length > 4) {
+          userObj['no'] = details[0];
+          userObj['name'] = details[1];
+          userObj['category'] = details[2];
+          userObj['bibno'] = details[3];
+          userObj['zone'] = details[4];
+          userObj['type'] = 'atheletes';
+        } else {
+          userObj['no'] = details[0];
+          userObj['name'] = details[1];
+          userObj['zone'] = (details.length > 3) ? details[2] : '';
+          userObj['designation'] = (details.length > 3) ? details[3] : details[2];
+          userObj['type'] = 'officials';
+        }
+        vm.getData(key).then((res) => {
+          if (res && Array.isArray(res) && res.length > 0) {
+            users = res;
+          }
+          users.push(userObj);
+          vm.setData(key, users);
+        });
       }
-      datum.push(data);
-      vm.setData(key, datum);
-    });
+    }
   }
 }

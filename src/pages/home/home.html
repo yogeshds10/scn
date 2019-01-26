@@ -10,7 +10,7 @@
   <ion-list>
     <ion-item>
       <ion-label>Event</ion-label>
-      <ion-select [(ngModel)]="type">
+      <ion-select [(ngModel)]="type" (ionChange)="onTypeChange()">
         <ion-option value="isolation">Isolation</ion-option>
         <ion-option value="breakfast">Breakfast</ion-option>
         <ion-option value="lunch">Lunch</ion-option>
@@ -21,10 +21,10 @@
   <button ion-button color="dark" full round (click)="scan()">Start Scan</button>
   <div class="flx-row">
     <div class="width50">
-      <button ion-button color="dark" full round (click)="onUsers('officials')">Officials</button>
+      <button ion-button [ngClass]="utype === 'officials' ? 'blue' : 'gray'" full round (click)="onUsers('officials')">Officials</button>
     </div>
     <div class="width50">
-      <button ion-button color="dark" full round (click)="onUsers('atheletes')">Atheletes</button>
+      <button ion-button [ngClass]="utype === 'atheletes' ? 'blue' : 'gray'" full round (click)="onUsers('atheletes')">Atheletes</button>
     </div>
   </div>
 
@@ -39,10 +39,10 @@
     </ion-item>
   </ion-list>
 
-  <ion-list>
+  <ion-list *ngIf="utype === 'atheletes'">
     <ion-item *ngFor="let user of atheletes">
       <ion-icon name="person" item-start></ion-icon>
-      <ion-label *ngIf="utype === 'atheletes'">
+      <ion-label>
         <h2>{{user.no}} - {{user.name}}</h2>
         <p>{{user.category}} - {{user.bibno}}</p>
       </ion-label>
