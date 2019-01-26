@@ -1,30 +1,45 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Ionic Blank
+      SCN
     </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
-  <h1>
-    <button ion-button color="dark" full round (click)="scan()">Start Scan</button>
-  </h1>
+  <ion-list>
+    <ion-item>
+      <ion-label>Event</ion-label>
+      <ion-select [(ngModel)]="type">
+        <ion-option value="isolation">Isolation</ion-option>
+        <ion-option value="breakfast">Breakfast</ion-option>
+        <ion-option value="lunch">Lunch</ion-option>
+        <ion-option value="dinner">Dinner</ion-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+  <button ion-button color="dark" full round (click)="scan()">Start Scan</button>
+  <div class="flx-row">
+    <div class="width50">
+      <button ion-button color="dark" full round (click)="onUsers('officials')">Officials</button>
+    </div>
+    <div class="width50">
+      <button ion-button color="dark" full round (click)="onUsers('atheletes')">Atheletes</button>
+    </div>
+  </div>
 
-  <ion-card *ngIf="productFound">
-    <ion-card-header>
-      <h2>Price: $ {{selectedProduct.price}}</h2>
-    </ion-card-header>
-    <ion-card-content>
-      <ul>
-        <li>{{selectedProduct.plu}}</li>
-        <li>{{selectedProduct.name}}</li>
-        <li>{{selectedProduct.desc}}</li>
-      </ul>
-    </ion-card-content>
-  </ion-card>
+  <ion-list>
+    <ion-item *ngFor="let user of users">
+      <ion-icon name="person" item-start></ion-icon>
+      <ion-label *ngIf="utype === 'officials'">
+        <h2>{{user.no}} - {{user.name}}</h2>
+        <p>{{user.designation}}</p>
+      </ion-label>
+      <ion-label *ngIf="utype === 'atheletes'">
+        <h2>{{user.no}} - {{user.name}}</h2>
+        <p>{{user.category}} - {{user.bibno}}</p>
+      </ion-label>
+      <ion-note item-end>{{user.zone}}</ion-note>
+    </ion-item>
+  </ion-list>
 </ion-content>
