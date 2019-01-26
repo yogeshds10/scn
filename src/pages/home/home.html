@@ -28,13 +28,20 @@
     </div>
   </div>
 
-  <ion-list>
-    <ion-item *ngFor="let user of users">
+  <ion-list *ngIf="utype === 'officials'">
+    <ion-item *ngFor="let user of officials">
       <ion-icon name="person" item-start></ion-icon>
-      <ion-label *ngIf="utype === 'officials'">
+      <ion-label>
         <h2>{{user.no}} - {{user.name}}</h2>
         <p>{{user.designation}}</p>
       </ion-label>
+      <ion-note item-end>{{user.zone}}</ion-note>
+    </ion-item>
+  </ion-list>
+
+  <ion-list>
+    <ion-item *ngFor="let user of atheletes">
+      <ion-icon name="person" item-start></ion-icon>
       <ion-label *ngIf="utype === 'atheletes'">
         <h2>{{user.no}} - {{user.name}}</h2>
         <p>{{user.category}} - {{user.bibno}}</p>
