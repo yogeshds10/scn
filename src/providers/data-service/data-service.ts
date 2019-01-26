@@ -44,8 +44,8 @@ export class DataServiceProvider {
 
   updateOffline(key: string, data: any) {
     const vm = this;
-    let users = [];
     if(data) {
+      let users = [];
       let details = data.split(',');
       details = details.filter(x => { return x });
       if(details && Array.isArray(details) && details.length > 0) {
@@ -68,7 +68,20 @@ export class DataServiceProvider {
           if (res && Array.isArray(res) && res.length > 0) {
             users = res;
           }
-          users.push(userObj);
+          if(key === 'isolation') {
+            const find = users.filter(u => {
+              return u['no'] === userObj['no'];
+            });
+            if(find && find.length > 0) {
+              users = users.filter(u => {
+                return u['no'] !== userObj['no'];
+              });
+            } else {
+              users.push(userObj);  
+            }
+          } else {
+            users.push(userObj);
+          }
           vm.setData(key, users);
         });
       }
