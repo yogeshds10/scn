@@ -16,11 +16,7 @@ export class HomePage {
 
   constructor(public navCtrl: NavController,
     private barcodeScanner: BarcodeScanner,
-    public dataService: DataServiceProvider) {
-      // this.dataService.getProducts()
-      //   .subscribe((response)=> {
-      //   });
-  }
+    public dataService: DataServiceProvider) {}
 
   onTypeChange() {
     const vm = this;
@@ -53,6 +49,8 @@ export class HomePage {
         if(res && Array.isArray(res) && res.length > 0) {
           vm.atheletes = res.filter(r => {
             return r.type === 'atheletes';
+          }).sort((a,b) => {
+              return b.time - a.time;
           });
           vm.officials = res.filter(r => {
             return r.type === 'officials';
@@ -66,4 +64,23 @@ export class HomePage {
     }
   }
 
+  syncNow() {
+    const vm = this;
+    const path = 'http://40.117.72.180:6001/scn/add/';
+    const events = ['isolation', 'breakfast', 'lunch', 'dinner',
+    '3isolation', '3breakfast', '3lunch', '3dinner',
+    '4isolation', '4breakfast', '4lunch', '4dinner'];
+    events.forEach(event => {
+      vm.dataService.getData(event).then(res => {
+        if (res && Array.isArray(res) && res.length > 0) {
+          vm.dataService.postData(path + event, res).subscribe(res => {
+            if(res && !res.error) {
+              vm.dataService.toastMessage(event + 'is uploaded', 'success');
+              vm.dataService.setData(event, []);
+            }
+          });
+        }
+      })
+    });
+  }
 }

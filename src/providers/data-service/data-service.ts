@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/observable/of';
 import { ToastController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 
@@ -57,18 +60,20 @@ export class DataServiceProvider {
           userObj['bibno'] = details[3];
           userObj['zone'] = details[4];
           userObj['type'] = 'atheletes';
+          userObj['time'] = Date.now();
         } else {
           userObj['no'] = details[0];
           userObj['name'] = details[1];
           userObj['zone'] = (details.length > 3) ? details[2] : '';
           userObj['designation'] = (details.length > 3) ? details[3] : details[2];
           userObj['type'] = 'officials';
+          userObj['time'] = Date.now();
         }
         vm.getData(key).then((res) => {
           if (res && Array.isArray(res) && res.length > 0) {
             users = res;
           }
-          if(key === 'isolation') {
+          if(key === 'isolation' || key === '3isolation' || key === '4isolation') {
             const find = users.filter(u => {
               return u['no'] === userObj['no'];
             });
@@ -85,6 +90,38 @@ export class DataServiceProvider {
           vm.setData(key, users);
         });
       }
+    }
+  }
+
+  postData(path: string, data: any): Observable<any> {
+    const vm = this;
+    return this.http.post(path, data)
+      .map((res: Response) => {
+        return vm.extractData(res, vm);
+      })
+      .catch((error: Response) => {
+        return vm.handleError(error, vm);
+      });
+  }
+
+  private extractData(res: Response, vm) {
+    const body = res.json();
+    if (body.error) {
+      throw (res);
+    } else {
+      return body.data;
+    }
+  }
+
+  private handleError(error: Response | any, vm) {
+    if (error.status === 401) {
+    } else if (error.status !== 0) {
+      const errorMsg = error.json();
+      return Observable.of(errorMsg).map(e => e);
+    } else if (error.status === 0) {
+      const resObj = {};
+      resObj['error'] = true;
+      return Observable.of(resObj).map(e => e);
     }
   }
 }

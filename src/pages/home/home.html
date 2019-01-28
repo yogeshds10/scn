@@ -1,8 +1,9 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>
-      SCN
-    </ion-title>
+    <div class="flx-row">
+      <ion-title>SCN</ion-title>
+      <ion-icon class="fs2" (click)="syncNow()" name="cloud-upload"></ion-icon>
+    </div>
   </ion-navbar>
 </ion-header>
 
@@ -15,16 +16,24 @@
         <ion-option value="breakfast">Breakfast</ion-option>
         <ion-option value="lunch">Lunch</ion-option>
         <ion-option value="dinner">Dinner</ion-option>
+        <ion-option value="3isolation">Day 3 - Isolation</ion-option>
+        <ion-option value="3breakfast">Day 3 - Breakfast</ion-option>
+        <ion-option value="3lunch">Day 3 - Lunch</ion-option>
+        <ion-option value="3dinner">Day 3 - Dinner</ion-option>
+        <ion-option value="4isolation">Day 4 - Isolation</ion-option>
+        <ion-option value="4breakfast">Day 4 -Breakfast</ion-option>
+        <ion-option value="4lunch">Day 4 - Lunch</ion-option>
+        <ion-option value="4dinner">Day 4 - Dinner</ion-option>
       </ion-select>
     </ion-item>
   </ion-list>
   <button ion-button color="dark" full round (click)="scan()">Start Scan</button>
   <div class="flx-row">
     <div class="width50">
-      <button ion-button [ngClass]="utype === 'officials' ? 'blue' : 'gray'" full round (click)="onUsers('officials')">Officials</button>
+      <button ion-button [ngClass]="utype === 'officials' ? 'blue' : 'gray'" full round (click)="onUsers('officials')">Officials - {{officials.length}}</button>
     </div>
     <div class="width50">
-      <button ion-button [ngClass]="utype === 'atheletes' ? 'blue' : 'gray'" full round (click)="onUsers('atheletes')">Atheletes</button>
+      <button ion-button [ngClass]="utype === 'atheletes' ? 'blue' : 'gray'" full round (click)="onUsers('atheletes')">Atheletes - {{atheletes.length}}</button>
     </div>
   </div>
 
